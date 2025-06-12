@@ -1,12 +1,27 @@
 # unreal-mcp-server
-<a href="https://youtu.be/V7KyjzFlBLk?si=sOY1dEVGV2hqi4JC">
-  <img src="https://github.com/GenOrca/Screenshot/blob/main/unreal-mcp/unreal-mcp-server.gif" alt="" width="640px">
-</a>  
-
-Demo : [Build 3D Scenes in Unreal Engine with Claude AI | Unreal-MCPython Demo](https://youtu.be/V7KyjzFlBLk?si=sOY1dEVGV2hqi4JC)
 
 unreal-mcp-server is a Python-based server that implements the Model Context Protocol (MCP) for Unreal Engine. 
 It enables smooth communication between MCP clients (e.g., Claude, Cursor, Windsurf) and the Unreal Editor, and is intended to be used together with the Unreal-MCPython Plugin.
+
+- Demo : [Build 3D Scenes in Unreal Engine with Claude AI | Unreal-MCPython Demo](https://youtu.be/V7KyjzFlBLk?si=sOY1dEVGV2hqi4JC)
+- Fab Link : [Unreal-MCPython: AI Assistant Plugin for Unreal Editor using Python & MCP](https://fab.com/s/aed5f75d50b2)
+- Github Link : [GenOrca/unreal-mcpython](https://github.com/GenOrca/unreal-mcpython)
+
+
+## 🎯 Why Choose Unreal-MCPython?
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/GenOrca/Screenshot/refs/heads/main/unreal-mcp/Screenshot%202025-06-02%20025106.png" width="400">
+<img src="https://raw.githubusercontent.com/GenOrca/Screenshot/refs/heads/main/unreal-mcp/Screenshot%202025-06-02%20025111.png" width="400">
+<img src="https://raw.githubusercontent.com/GenOrca/Screenshot/refs/heads/main/unreal-mcp/Screenshot%202025-06-02%20025115.png" width="400">
+<img src="https://raw.githubusercontent.com/GenOrca/Screenshot/refs/heads/main/unreal-mcp/Screenshot%202025-06-02%20025120.png" width="400">
+</p>
+
+- 🧠 **Unreal AI integration** - Direct Claude AI assistance in Unreal Engine
+- 🔗 **Native MCP protocol support** - Seamless communication between AI and UE
+- 🎮 **Intelligent game development** - AI-powered asset management and scene manipulation  
+- ⚡ **Smart automation** - Context-aware blueprint scripting with AI guidance
+- 🎨 **Technical artist focused** - AI assistance for complex production pipelines
 
 ## Key Features
 
