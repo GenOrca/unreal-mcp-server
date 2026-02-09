@@ -7,7 +7,7 @@ from fastmcp import FastMCP
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union, Dict, Any, Annotated
 
-from unreal_mcp.core import send_to_unreal, ToolInputError, UnrealExecutionError
+from unreal_mcp.core import send_unreal_action, ToolInputError
 
 MATERIAL_ACTIONS_MODULE = "UnrealMCPython.material_actions"
 
@@ -26,20 +26,13 @@ async def create_material_expression(
     node_pos_x: Annotated[int, Field(description="X position for the new node in the material editor graph.")] = 0,
     node_pos_y: Annotated[int, Field(description="Y position for the new node in the material editor graph.")] = 0
 ) -> dict:
-    try:
-        action_params = {
-            "material_path": material_path,
-            "expression_class_name": expression_class_name,
-            "node_pos_x": node_pos_x,
-            "node_pos_y": node_pos_y
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_create_material_expression", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "material_path": material_path,
+        "expression_class_name": expression_class_name,
+        "node_pos_x": node_pos_x,
+        "node_pos_y": node_pos_y
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="connect_material_expressions",
@@ -55,23 +48,16 @@ async def connect_material_expressions(
     from_expression_class_name: Annotated[Optional[str], Field(description="Optional: Specific class name of the source expression if identifier is ambiguous.")] = None,
     to_expression_class_name: Annotated[Optional[str], Field(description="Optional: Specific class name of the destination expression if identifier is ambiguous.")] = None
 ) -> dict:
-    try:
-        action_params = {
-            "material_path": material_path,
-            "from_expression_identifier": from_expression_identifier,
-            "from_output_name": from_output_name,
-            "to_expression_identifier": to_expression_identifier,
-            "to_input_name": to_input_name,
-            "from_expression_class_name": from_expression_class_name,
-            "to_expression_class_name": to_expression_class_name
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_connect_material_expressions", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "material_path": material_path,
+        "from_expression_identifier": from_expression_identifier,
+        "from_output_name": from_output_name,
+        "to_expression_identifier": to_expression_identifier,
+        "to_input_name": to_input_name,
+        "from_expression_class_name": from_expression_class_name,
+        "to_expression_class_name": to_expression_class_name
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="recompile_material",
@@ -81,15 +67,8 @@ async def connect_material_expressions(
 async def recompile_material(
     material_path: Annotated[str, Field(description="Path to the material or material instance asset to recompile (e.g., /Game/Materials/MyMaterial.MyMaterial).")]
 ) -> dict:
-    try:
-        action_params = {"material_path": material_path}
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_recompile_material", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {"material_path": material_path}
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="get_material_instance_scalar_parameter",
@@ -100,18 +79,11 @@ async def get_material_instance_scalar_parameter(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the scalar parameter.")]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_get_material_instance_scalar_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="set_material_instance_scalar_parameter",
@@ -123,19 +95,12 @@ async def set_material_instance_scalar_parameter(
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     value: Annotated[float, Field(description="The float value to set for the scalar parameter.")]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name,
-            "value": value
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_set_material_instance_scalar_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name,
+        "value": value
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="get_material_instance_vector_parameter",
@@ -146,18 +111,11 @@ async def get_material_instance_vector_parameter(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the vector parameter.")]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_get_material_instance_vector_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="set_material_instance_vector_parameter",
@@ -169,19 +127,12 @@ async def set_material_instance_vector_parameter(
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     value: Annotated[List[float], Field(description="The vector value [R, G, B, A] to set.", min_length=4, max_length=4)]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name,
-            "value": value
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_set_material_instance_vector_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name,
+        "value": value
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="get_material_instance_texture_parameter",
@@ -192,18 +143,11 @@ async def get_material_instance_texture_parameter(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the texture parameter.")]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_get_material_instance_texture_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="set_material_instance_texture_parameter",
@@ -215,19 +159,12 @@ async def set_material_instance_texture_parameter(
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     texture_path: Annotated[Optional[str], Field(description="Path to the texture asset to set. Set to null or empty string to clear.")] = None
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name,
-            "texture_path": texture_path
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_set_material_instance_texture_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name,
+        "texture_path": texture_path
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="get_material_instance_static_switch_parameter",
@@ -238,18 +175,11 @@ async def get_material_instance_static_switch_parameter(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the static switch parameter.")]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_get_material_instance_static_switch_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
     name="set_material_instance_static_switch_parameter",
@@ -261,16 +191,9 @@ async def set_material_instance_static_switch_parameter(
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     value: Annotated[bool, Field(description="The boolean value to set for the static switch parameter.")]
 ) -> dict:
-    try:
-        action_params = {
-            "instance_path": instance_path,
-            "parameter_name": parameter_name,
-            "value": value
-        }
-        return await send_to_unreal(action_module=MATERIAL_ACTIONS_MODULE, action_name="ue_set_material_instance_static_switch_parameter_value", params=action_params)
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except ToolInputError as e:
-        return {"success": False, "message": str(e)}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred in material_router: {str(e)}"}
+    params = {
+        "instance_path": instance_path,
+        "parameter_name": parameter_name,
+        "value": value
+    }
+    return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)

@@ -5,8 +5,7 @@
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field
 from typing import Annotated, Optional
-# Updated import to use core.py to avoid circular dependency
-from unreal_mcp.core import send_to_unreal, ToolInputError, UnrealExecutionError
+from unreal_mcp.core import send_unreal_action, ToolInputError
 
 util_mcp = FastMCP(name="UtilityMCP", description="Utility tools for Unreal Engine logging and diagnostics.")
 
@@ -25,12 +24,4 @@ async def get_output_log(
     params = {"line_count": line_count}
     if keyword is not None:
         params["keyword"] = keyword
-    try:
-        return await send_to_unreal(
-            action_module=UTIL_ACTIONS_MODULE,
-            action_name="ue_get_output_log",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(UTIL_ACTIONS_MODULE, params)

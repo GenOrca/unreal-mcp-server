@@ -2,6 +2,7 @@
 
 import socket
 import json
+import sys
 
 # Custom Exception classes
 class ToolInputError(Exception):
@@ -11,6 +12,23 @@ class UnrealExecutionError(Exception):
     def __init__(self, message, details=None):
         super().__init__(message)
         self.details = details if details is not None else {}
+
+
+async def send_unreal_action(action_module: str, params: dict) -> dict:
+    """
+    Convention-based wrapper for send_to_unreal.
+    Auto-derives action_name from the calling function's name.
+    Convention: caller 'foo_bar' → action 'ue_foo_bar'
+    Also includes standard error handling.
+    """
+    caller_name = sys._getframe(1).f_code.co_name
+    action_name = f"ue_{caller_name}"
+    try:
+        return await send_to_unreal(action_module, action_name, params)
+    except UnrealExecutionError as e:
+        return {"success": False, "message": str(e), "details": e.details}
+    except Exception as e:
+        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
 
 # Core send_to_unreal function
 async def send_to_unreal(action_module: str, action_name: str, params: dict) -> dict:

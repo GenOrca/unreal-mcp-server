@@ -1,8 +1,8 @@
 # Copyright (c) 2025 GenOrca. All Rights Reserved.
 
 from fastmcp import FastMCP
-from unreal_mcp.core import send_to_unreal, UnrealExecutionError
-from typing import List # Added List
+from unreal_mcp.core import send_unreal_action
+from typing import List
 
 EDITOR_ACTIONS_MODULE = "UnrealMCPython.editor_actions"
 
@@ -15,17 +15,7 @@ editor_mcp = FastMCP(name="EditorMCP", description="Tools for managing and query
 )
 async def get_selected_assets() -> dict:
     """Gets the set of currently selected assets."""
-    try:
-        params = {}
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_get_selected_assets",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, {})
 
 @editor_mcp.tool(
     name="unreal_replace_materials_on_selected_actors_components",
@@ -33,24 +23,15 @@ async def get_selected_assets() -> dict:
     tags={"unreal", "editor", "actor", "material", "replace", "selected"}
 )
 async def replace_materials_on_selected_actors_components(
-    material_to_be_replaced_path: str, 
+    material_to_be_replaced_path: str,
     new_material_path: str
 ) -> dict:
     """Replaces materials on mesh components of selected actors."""
-    try:
-        params = {
-            "material_to_be_replaced_path": material_to_be_replaced_path,
-            "new_material_path": new_material_path
-        }
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_replace_materials_on_selected_actors_components",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    params = {
+        "material_to_be_replaced_path": material_to_be_replaced_path,
+        "new_material_path": new_material_path
+    }
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, params)
 
 @editor_mcp.tool(
     name="unreal_replace_materials_on_specified_actors_components",
@@ -58,26 +39,17 @@ async def replace_materials_on_selected_actors_components(
     tags={"unreal", "editor", "actor", "material", "replace", "specified"}
 )
 async def replace_materials_on_specified_actors_components(
-    actor_paths: List[str], 
-    material_to_be_replaced_path: str, 
+    actor_paths: List[str],
+    material_to_be_replaced_path: str,
     new_material_path: str
 ) -> dict:
     """Replaces materials on mesh components of specified actors."""
-    try:
-        params = {
-            "actor_paths": actor_paths,
-            "material_to_be_replaced_path": material_to_be_replaced_path,
-            "new_material_path": new_material_path
-        }
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_replace_materials_on_specified_actors_components",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    params = {
+        "actor_paths": actor_paths,
+        "material_to_be_replaced_path": material_to_be_replaced_path,
+        "new_material_path": new_material_path
+    }
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, params)
 
 @editor_mcp.tool(
     name="unreal_replace_meshes_on_selected_actors_components",
@@ -85,24 +57,15 @@ async def replace_materials_on_specified_actors_components(
     tags={"unreal", "editor", "actor", "mesh", "staticmesh", "replace", "selected"}
 )
 async def replace_meshes_on_selected_actors_components(
-    mesh_to_be_replaced_path: str, 
+    mesh_to_be_replaced_path: str,
     new_mesh_path: str
 ) -> dict:
     """Replaces static meshes on components of selected actors."""
-    try:
-        params = {
-            "mesh_to_be_replaced_path": mesh_to_be_replaced_path,
-            "new_mesh_path": new_mesh_path
-        }
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_replace_meshes_on_selected_actors_components",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    params = {
+        "mesh_to_be_replaced_path": mesh_to_be_replaced_path,
+        "new_mesh_path": new_mesh_path
+    }
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, params)
 
 @editor_mcp.tool(
     name="unreal_replace_meshes_on_specified_actors_components",
@@ -110,26 +73,17 @@ async def replace_meshes_on_selected_actors_components(
     tags={"unreal", "editor", "actor", "mesh", "staticmesh", "replace", "specified"}
 )
 async def replace_meshes_on_specified_actors_components(
-    actor_paths: List[str], 
-    mesh_to_be_replaced_path: str, 
+    actor_paths: List[str],
+    mesh_to_be_replaced_path: str,
     new_mesh_path: str
 ) -> dict:
     """Replaces static meshes on components of specified actors."""
-    try:
-        params = {
-            "actor_paths": actor_paths,
-            "mesh_to_be_replaced_path": mesh_to_be_replaced_path,
-            "new_mesh_path": new_mesh_path
-        }
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_replace_meshes_on_specified_actors_components",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    params = {
+        "actor_paths": actor_paths,
+        "mesh_to_be_replaced_path": mesh_to_be_replaced_path,
+        "new_mesh_path": new_mesh_path
+    }
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, params)
 
 @editor_mcp.tool(
     name="unreal_replace_selected_actors_with_blueprint",
@@ -140,19 +94,10 @@ async def replace_selected_actors_with_blueprint(
     blueprint_asset_path: str
 ) -> dict:
     """Replaces selected actors with instances of a Blueprint."""
-    try:
-        params = {
-            "blueprint_asset_path": blueprint_asset_path
-        }
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_replace_selected_actors_with_blueprint",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    params = {
+        "blueprint_asset_path": blueprint_asset_path
+    }
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, params)
 
 @editor_mcp.tool(
     name="unreal_get_selected_blueprint_nodes",
@@ -161,17 +106,7 @@ async def replace_selected_actors_with_blueprint(
 )
 async def get_selected_blueprint_nodes() -> dict:
     """Gets information about currently selected blueprint nodes in the editor."""
-    try:
-        params = {}
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_get_selected_blueprint_nodes",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, {})
 
 @editor_mcp.tool(
     name="unreal_get_selected_blueprint_node_infos",
@@ -180,14 +115,4 @@ async def get_selected_blueprint_nodes() -> dict:
 )
 async def get_selected_blueprint_node_infos() -> dict:
     """Gets detailed info (including pin connections) about currently selected blueprint nodes for LLM/external tools."""
-    try:
-        params = {}
-        return await send_to_unreal(
-            action_module=EDITOR_ACTIONS_MODULE,
-            action_name="ue_get_selected_blueprint_node_infos",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(EDITOR_ACTIONS_MODULE, {})

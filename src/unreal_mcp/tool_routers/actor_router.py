@@ -6,8 +6,7 @@ from typing import Annotated, Optional, List
 from pydantic import Field
 from fastmcp import FastMCP
 
-# Updated import to use core.py to avoid circular dependency
-from unreal_mcp.core import send_to_unreal, ToolInputError, UnrealExecutionError
+from unreal_mcp.core import send_unreal_action, ToolInputError
 
 ACTOR_ACTIONS_MODULE = "UnrealMCPython.actor_actions"
 
@@ -24,16 +23,7 @@ async def spawn_actor_from_object(
 ) -> dict:
     """Spawns an actor from an asset path."""
     params = {"asset_path": asset_path, "location": location}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_spawn_actor_from_object",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_duplicate_selected_actors",
@@ -45,16 +35,7 @@ async def duplicate_selected_actors_with_offset(
 ) -> dict:
     """Duplicates selected actors with an offset."""
     params = {"offset": offset}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_duplicate_selected_actors_with_offset",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_select_all_actors",
@@ -63,16 +44,7 @@ async def duplicate_selected_actors_with_offset(
 )
 async def select_all_actors() -> dict:
     """Selects all actors in the level."""
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_select_all_actors",
-            params={}
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, {})
 
 @actor_mcp.tool(
     name="unreal_invert_actor_selection",
@@ -81,16 +53,7 @@ async def select_all_actors() -> dict:
 )
 async def invert_actor_selection() -> dict:
     """Inverts the current actor selection."""
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_invert_actor_selection",
-            params={}
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, {})
 
 @actor_mcp.tool(
     name="unreal_delete_actor_by_label",
@@ -102,16 +65,7 @@ async def delete_actor_by_label(
 ) -> dict:
     """Deletes an actor by its label."""
     params = {"actor_label": actor_label}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_delete_actor_by_label",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_list_all_actors_with_locations",
@@ -120,16 +74,7 @@ async def delete_actor_by_label(
 )
 async def list_all_actors_with_locations() -> dict:
     """Lists all actors and their locations."""
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_list_all_actors_with_locations",
-            params={}
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, {})
 
 @actor_mcp.tool(
     name="unreal_spawn_actor_from_class",
@@ -143,17 +88,7 @@ async def spawn_actor_from_class(
 ) -> dict:
     """Spawns an actor from a class path with optional rotation."""
     params = {"class_path": class_path, "location": location, "rotation": rotation}
-
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_spawn_actor_from_class",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_get_all_actors_details",
@@ -162,16 +97,7 @@ async def spawn_actor_from_class(
 )
 async def get_all_actors_details() -> dict:
     """Gets detailed information for all actors."""
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_get_all_actors_details",
-            params={}
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, {})
 
 @actor_mcp.tool(
     name="unreal_set_actor_transform",
@@ -187,18 +113,9 @@ async def set_actor_transform(
     """Sets the transform of an actor. At least one transform component must be provided."""
     if location is None and rotation is None and scale is None:
         raise ToolInputError("At least one of location, rotation, or scale must be provided.")
-    
+
     params = {"actor_label": actor_label, "location": location, "rotation": rotation, "scale": scale}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_set_actor_transform",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_set_actor_location",
@@ -211,16 +128,7 @@ async def set_actor_location(
 ) -> dict:
     """Sets the location of an actor."""
     params = {"actor_label": actor_label, "location": location}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_set_actor_location",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_set_actor_rotation",
@@ -233,16 +141,7 @@ async def set_actor_rotation(
 ) -> dict:
     """Sets the rotation of an actor."""
     params = {"actor_label": actor_label, "rotation": rotation}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_set_actor_rotation",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_set_actor_scale",
@@ -255,16 +154,7 @@ async def set_actor_scale(
 ) -> dict:
     """Sets the scale of an actor."""
     params = {"actor_label": actor_label, "scale": scale}
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_set_actor_scale",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_spawn_actor_on_surface_raycast",
@@ -295,16 +185,7 @@ async def spawn_actor_on_surface_with_raycast(
         "trace_channel": trace_channel,
         "actors_to_ignore_labels": actors_to_ignore_labels
     }
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_spawn_actor_on_surface_with_raycast",
-            params=params
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, params)
 
 @actor_mcp.tool(
     name="unreal_get_actors_in_view_frustum",
@@ -313,13 +194,4 @@ async def spawn_actor_on_surface_with_raycast(
 )
 async def get_actors_in_editor_view_frustum() -> dict:
     """Gets actors estimated to be in the editor view frustum."""
-    try:
-        return await send_to_unreal(
-            action_module=ACTOR_ACTIONS_MODULE,
-            action_name="ue_get_actors_in_editor_view_frustum",
-            params={}
-        )
-    except UnrealExecutionError as e:
-        return {"success": False, "message": str(e), "details": e.details}
-    except Exception as e:
-        return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
+    return await send_unreal_action(ACTOR_ACTIONS_MODULE, {})
