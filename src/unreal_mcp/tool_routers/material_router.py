@@ -16,11 +16,11 @@ material_mcp = FastMCP(name="MaterialMCP", description="Tools for managing and e
 # --- Tool Endpoints for Materials (Refactored for FastMCP) ---
 
 @material_mcp.tool(
-    name="create_material_expression",
+    name="create_expression",
     description="Creates a new expression node within a specified material asset.",
     tags={"unreal", "material", "shader", "graph", "editor"}
 )
-async def create_material_expression(
+async def create_expression(
     material_path: Annotated[str, Field(description="Path to the parent material asset (e.g., /Game/Materials/MyBaseMaterial.MyBaseMaterial)")],
     expression_class_name: Annotated[str, Field(description="Class name of the expression to create (e.g., MaterialExpressionTextureSample, MaterialExpressionScalarParameter)")],
     node_pos_x: Annotated[int, Field(description="X position for the new node in the material editor graph.")] = 0,
@@ -35,11 +35,11 @@ async def create_material_expression(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="connect_material_expressions",
+    name="connect_expressions",
     description="Connects two expression nodes within a material asset.",
     tags={"unreal", "material", "shader", "graph", "editor"}
 )
-async def connect_material_expressions(
+async def connect_expressions(
     material_path: Annotated[str, Field(description="Path to the material asset.")],
     from_expression_identifier: Annotated[str, Field(description="Name (desc) or class of the source expression node.")],
     from_output_name: Annotated[str, Field(description="Name of the output pin on the source expression (e.g., \"R\", \"G\", \"B\", \"A\", or empty for default).")],
@@ -60,22 +60,22 @@ async def connect_material_expressions(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="recompile_material",
+    name="recompile",
     description="Recompiles a material or material instance asset.",
     tags={"unreal", "material", "shader", "compile"}
 )
-async def recompile_material(
+async def recompile(
     material_path: Annotated[str, Field(description="Path to the material or material instance asset to recompile (e.g., /Game/Materials/MyMaterial.MyMaterial).")]
 ) -> dict:
     params = {"material_path": material_path}
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="get_material_instance_scalar_parameter",
+    name="get_mi_scalar_param",
     description="Gets the value of a scalar parameter from a material instance.",
     tags={"unreal", "material", "instance", "parameter", "scalar", "query"}
 )
-async def get_material_instance_scalar_parameter(
+async def get_mi_scalar_param(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the scalar parameter.")]
 ) -> dict:
@@ -86,11 +86,11 @@ async def get_material_instance_scalar_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="set_material_instance_scalar_parameter",
+    name="set_mi_scalar_param",
     description="Sets the value of a scalar parameter in a material instance.",
     tags={"unreal", "material", "instance", "parameter", "scalar", "modify"}
 )
-async def set_material_instance_scalar_parameter(
+async def set_mi_scalar_param(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     value: Annotated[float, Field(description="The float value to set for the scalar parameter.")]
@@ -103,11 +103,11 @@ async def set_material_instance_scalar_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="get_material_instance_vector_parameter",
+    name="get_mi_vector_param",
     description="Gets the value of a vector parameter from a material instance.",
     tags={"unreal", "material", "instance", "parameter", "vector", "query"}
 )
-async def get_material_instance_vector_parameter(
+async def get_mi_vector_param(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the vector parameter.")]
 ) -> dict:
@@ -118,11 +118,11 @@ async def get_material_instance_vector_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="set_material_instance_vector_parameter",
+    name="set_mi_vector_param",
     description="Sets the value of a vector parameter in a material instance.",
     tags={"unreal", "material", "instance", "parameter", "vector", "modify"}
 )
-async def set_material_instance_vector_parameter(
+async def set_mi_vector_param(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     value: Annotated[List[float], Field(description="The vector value [R, G, B, A] to set.", min_length=4, max_length=4)]
@@ -135,11 +135,11 @@ async def set_material_instance_vector_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="get_material_instance_texture_parameter",
+    name="get_mi_texture_param",
     description="Gets the texture asset assigned to a texture parameter in a material instance.",
     tags={"unreal", "material", "instance", "parameter", "texture", "query"}
 )
-async def get_material_instance_texture_parameter(
+async def get_mi_texture_param(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the texture parameter.")]
 ) -> dict:
@@ -150,11 +150,11 @@ async def get_material_instance_texture_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="set_material_instance_texture_parameter",
+    name="set_mi_texture_param",
     description="Sets or clears a texture asset for a texture parameter in a material instance.",
     tags={"unreal", "material", "instance", "parameter", "texture", "modify"}
 )
-async def set_material_instance_texture_parameter(
+async def set_mi_texture_param(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     texture_path: Annotated[Optional[str], Field(description="Path to the texture asset to set. Set to null or empty string to clear.")] = None
@@ -167,11 +167,11 @@ async def set_material_instance_texture_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="get_material_instance_static_switch_parameter",
+    name="get_mi_static_switch",
     description="Gets the value of a static switch parameter from a material instance.",
     tags={"unreal", "material", "instance", "parameter", "static", "switch", "query"}
 )
-async def get_material_instance_static_switch_parameter(
+async def get_mi_static_switch(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the static switch parameter.")]
 ) -> dict:
@@ -182,11 +182,11 @@ async def get_material_instance_static_switch_parameter(
     return await send_unreal_action(MATERIAL_ACTIONS_MODULE, params)
 
 @material_mcp.tool(
-    name="set_material_instance_static_switch_parameter",
+    name="set_mi_static_switch",
     description="Sets the value of a static switch parameter in a material instance.",
     tags={"unreal", "material", "instance", "parameter", "static", "switch", "modify"}
 )
-async def set_material_instance_static_switch_parameter(
+async def set_mi_static_switch(
     instance_path: Annotated[str, Field(description="Path to the Material Instance Constant asset.")],
     parameter_name: Annotated[str, Field(description="Name of the parameter.")],
     value: Annotated[bool, Field(description="The boolean value to set for the static switch parameter.")]

@@ -12,7 +12,7 @@ util_mcp = FastMCP(name="UtilityMCP", description="Utility tools for Unreal Engi
 UTIL_ACTIONS_MODULE = "UnrealMCPython.util_actions"
 
 @util_mcp.tool(
-    name="unreal_get_output_log",
+    name="get_output_log",
     description="Retrieves recent lines from the Unreal Engine output log. Supports filtering by keyword to find specific errors or warnings.",
     tags={"unreal", "log", "debug", "diagnostics"}
 )
